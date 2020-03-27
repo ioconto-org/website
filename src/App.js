@@ -9,7 +9,7 @@ function App() {
                 <Route path="/">
                     <header className="App-header">
                         <p>
-                            #IoConto.org
+                            #IoConto
                         </p>
                     </header>
                 </Route>
