@@ -43,7 +43,7 @@
   text-align: center;
 }
 
-a a:visited {
+a, a:visited {
   color: white;
 }
 
