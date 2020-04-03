@@ -36,3 +36,17 @@
     transform: rotate(360deg);
   }
 }
+
+.mission {
+  margin-left: 10%;
+  margin-right: 10%;
+  text-align: center;
+}
+
+a a:visited {
+  color: white;
+}
+
+a:visited {
+  color: white;
+}
