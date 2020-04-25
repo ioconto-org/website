@@ -1,11 +1,14 @@
-import Vue from 'vue'
-import App from './App.vue'
+import Vue from 'vue';
+import App from './App.vue';
 import VueGtag from "vue-gtag";
-import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue'
+import BootstrapVue from 'bootstrap-vue';
+import BootstrapVueIcons from 'bootstrap-vue';
+
 import i18n from './i18n';
+import router from './router';
 
+/* Css Styles */
 import 'leaflet/dist/leaflet.css';
-
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
@@ -29,5 +32,6 @@ Vue.config.productionTip = false
 
 new Vue({
   i18n,
+  router,
   render: h => h(App),
 }).$mount('#app')
