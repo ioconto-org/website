@@ -1,0 +1,64 @@
+version: '3.4'
+
+services:
+
+  db:
+    image: mysql:5.7
+    volumes:
+      - /var/mysql:/var/lib/mysql
+    restart: always
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${COVID19_DB}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_HOST: '%'
+
+#  api:
+
+  website:
+    &default-website
+    build:
+      context: ./src/website/
+    image: ${DOCKER_REGISTRY}/${DOCKER_WEBSITE}:latest
+
+  website_latest:
+    *default-website
+
+  website_dev:
+    << : *default-website
+    image: ubi-httpd:1.0
+    depends_on:
+      - nginx-proxy
+    image: ${DOCKER_REGISTRY}/${DOCKER_WEBSITE}:${NODE_ENV}
+    container_name: ${APP_NAME}-website
+    environment:
+      - VIRTUAL_HOST=${WEBSITE_URL}
+
+  phpmyadmin:
+    depends_on:
+      - db
+      - nginx-proxy
+    image: phpmyadmin/phpmyadmin
+    links:
+      - db:db
+    container_name: phpmyadmin
+    environment:
+      - PMA_ARBITRARY=1
+    restart: always
+    volumes:
+      - /sessions
+    environment:
+      - VIRTUAL_HOST=${PHPMYADMIN_URL}
+
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    restart: always
+    container_name: nginx-proxy
+    ports:
+      - 8085:80
+      - 443:443
+    volumes:
+      - /etc/certs:/etc/nginx/certs:ro
+      - /var/run/docker.sock:/tmp/docker.sock:ro

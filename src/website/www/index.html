@@ -1,0 +1,94 @@
+<html>
+  <head>
+    <title>IoConto - Covid19</title>
+
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+    <link href="./style.css" rel="stylesheet" />
+
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+      integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+      crossorigin=""
+    />
+
+    <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <script
+      src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+      integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+      crossorigin=""
+    ></script>
+  </head>
+  <body>
+    <nav
+      class="navbar navbar-expand-sm navbar-light bg-light sticky-top d-flex"
+    >
+      <a class="navbar-brand" href="#"
+        ><img src="/assets/logo-ioconto-64.png"
+      /></a>
+
+      <div class="navbar-nav">
+        <a
+          href="https://docs.google.com/forms/d/e/1FAIpQLSe_gJ1vM_2WXYkCNoyGwWRjLJcSlvEf9DwZAfpwR3IXLqbwSw/viewform"
+          target="_blank"
+          ><button class="btn btn-primary m-2">Segnala Dati Comunali</button></a
+        >
+        <a
+          href="https://docs.google.com/forms/d/e/1FAIpQLSfbs90muj6Fe30pb2fi12kZDznBrvYhPSnB8nmSWjWP58jKuA/viewform"
+          target="_blank"
+          ><button class="btn btn-primary m-2">
+            Segnala Dati Ospedalieri
+          </button></a
+        >
+        <a
+          href="https://docs.google.com/forms/d/e/1FAIpQLSd6_80C6IPNAyyMrIM5Z6MoUMtmTiEi56Ex9H_4rFvkgp9CvQ/viewform"
+          target="_blank"
+          ><button class="btn btn-primary m-2">Voglio Partecipare</button></a
+        >
+      </div>
+
+      <form class="form-inline my-2 my-lg-0 flex-fill">
+        <div class="autocomplete flex-grow-1 mr-sm-2">
+          <input
+            id="searchInput"
+            name="searchLocation"
+            autocomplete="off"
+            class="form-control form-control-lg w-100"
+            type="search"
+            placeholder="Ricerca per comune"
+          />
+        </div>
+      </form>
+    </nav>
+
+    <main id="mapIoConto"></main>
+
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+      integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+      integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+      crossorigin="anonymous"
+    ></script>
+
+    <script src="./index.js"></script>
+  </body>
+</html>
