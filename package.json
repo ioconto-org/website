@@ -33,7 +33,7 @@
     "serve": "vue-cli-service serve ./src/website/vue/src/main.js --open",
     "build": "vue-cli-service build ./src/website/vue/src/main.js",
     "lint": "vue-cli-service lint ./src/website/vue/src/main.js",
-    "predeploy": "npm run build && cp CNAME build/CNAME",
+    "predeploy": "npm run build && cp CNAME dist/CNAME",
     "deploy": "gh-pages -d dist"
   },
   "devDependencies": {
