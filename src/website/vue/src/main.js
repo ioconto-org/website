@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import App from './App.vue'
+import VueGtag from "vue-gtag";
 import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue'
 import i18n from './i18n';
 
@@ -20,6 +21,9 @@ Icon.Default.mergeOptions({
 
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
+Vue.use(VueGtag, {
+  config: { id: "UA-164557154-1" }
+});
 
 Vue.config.productionTip = false
 

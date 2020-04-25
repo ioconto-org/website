@@ -18,6 +18,7 @@
     "mysql": "^2.18.1",
     "vue": "^2.6.11",
     "vue-bootstrap-typeahead": "^0.2.6",
+    "vue-gtag": "^1.6.2",
     "vue-i18n": "^8.17.3",
     "vue2-leaflet": "^2.5.2",
     "winston": "^3.2.1"

@@ -145,7 +145,7 @@ export default {
         let c =
           '<a href="http://chart.ioconto.org/IoContoCompChart/drawCityChart.htm?city=' +
           feature.properties.istatId +
-          '" target="_blank"><strong>' +
+          '" target="_blank"><i class="material-icons">insert_chart_outlined</i><strong>' +
           feature.properties.name +
           "</strong></a><br />";
         c += "Decessi Marzo 2020: " + feature.properties.deaths + " (+" +
@@ -271,4 +271,5 @@ ul {
   overflow: hidden;
   max-height: 0;
 }
+
 </style>
