@@ -1,11 +1,17 @@
 import VueRouter from 'vue-router';
 import Vue from 'vue';
-import Map from './components/Map';
+
+import Homepage from './pages/Homepage';
+import MunicipalityDetails from './pages/MunicipalityDetails';
 
 const routes = [
     {
         path: '/',
-        component: Map
+        component: Homepage
+    },
+    {
+        path: '/istat/:istatId',
+        component: MunicipalityDetails
     }
 ];
 
