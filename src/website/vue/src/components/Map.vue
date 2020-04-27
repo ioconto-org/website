@@ -1,64 +1,66 @@
 <template>
-  <div style="height: 85vh; width: 100%; position:relative;">
-    <l-map
-      ref="map"
-      :zoom="zoom"
-      :center="center"
-      :options="mapOptions"
-      style="height: 100%"
-      @update:center="centerUpdate"
-      @update:zoom="zoomUpdate"
-    >
-      <l-tile-layer :url="url" :attribution="attribution" />
-      <l-control
-        title="Center map on your location"
-        class="leaflet-bar leaflet-control"
-        disableClickPropagation
-        position="topleft"
+  <b-overlay opacity="0.5" :show="loading" z-index="600" rounded="sm">
+    <div style="height: 85vh; width: 100%; position:relative;">
+      <l-map
+        ref="map"
+        :zoom="zoom"
+        :center="center"
+        :options="mapOptions"
+        style="height: 100%"
+        @update:center="centerUpdate"
+        @update:zoom="zoomUpdate"
       >
-        <a @click="goToCurrentLocation()" class="map-control location-control">
-          <i class="material-icons">{{ locationIcon }}</i>
-        </a>
-      </l-control>
-
-      <l-control
-        title="Data"
-        class="leaflet-bar leaflet-control"
-        disableClickPropagation
-        position="topleft"
-      >
-        <a href="https://github.com/ioconto/covid19" class="map-control data-control">
-          <i class="material-icons">storage</i>
-        </a>
-      </l-control>
-
-      <transition name="slide">
+        <l-tile-layer :url="url" :attribution="attribution" />
         <l-control
-          v-show="showLegend"
+          title="Center map on your location"
+          class="leaflet-bar leaflet-control"
+          disableClickPropagation
+          position="topleft"
+        >
+          <a @click="goToCurrentLocation()" class="map-control location-control">
+            <i class="material-icons">{{ locationIcon }}</i>
+          </a>
+        </l-control>
+
+        <l-control
+          title="Data"
+          class="leaflet-bar leaflet-control"
+          disableClickPropagation
+          position="topleft"
+        >
+          <a href="https://github.com/ioconto/covid19" class="map-control data-control">
+            <i class="material-icons">storage</i>
+          </a>
+        </l-control>
+
+        <transition name="slide">
+          <l-control
+            v-show="showLegend"
+            title="Legenda"
+            class="leaflet-bar leaflet-control"
+            disableClickPropagation
+            position="bottomleft"
+          >
+            <a class="legend-container">
+              <map-legend></map-legend>
+            </a>
+          </l-control>
+        </transition>
+
+        <l-control
+          :class="showLegend ? 'rotate-0' : 'rotate-180'"
           title="Legenda"
           class="leaflet-bar leaflet-control"
           disableClickPropagation
           position="bottomleft"
         >
-          <a class="legend-container">
-            <map-legend></map-legend>
+          <a @click="toggleLegend()" class="map-control data-control">
+            <i class="material-icons">keyboard_arrow_down</i>
           </a>
         </l-control>
-      </transition>
-
-      <l-control
-        :class="showLegend ? 'rotate-0' : 'rotate-180'"
-        title="Legenda"
-        class="leaflet-bar leaflet-control"
-        disableClickPropagation
-        position="bottomleft"
-      >
-        <a @click="toggleLegend()" class="map-control data-control">
-          <i class="material-icons">keyboard_arrow_down</i>
-        </a>
-      </l-control>
-    </l-map>
-  </div>
+      </l-map>
+    </div>
+  </b-overlay>
 </template>
 
 <script>
@@ -84,6 +86,7 @@ export default {
   },
   data() {
     return {
+      loading: true,
       geoJson: {},
       zoom: 7,
       center: [45.75151263, 9.90631523],
@@ -104,8 +107,8 @@ export default {
       "https://raw.githubusercontent.com/ioconto/covid19/master/opendata/current/it-total-deaths.json"
     );
     this.geoJson = await response.json();
-
     this.addGeoJson();
+    this.loading = false;
   },
   mounted() {},
   watch: {

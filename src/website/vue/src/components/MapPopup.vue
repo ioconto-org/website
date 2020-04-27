@@ -2,9 +2,13 @@
   <div>
     <b-row>
       <b-col>
-        <router-link :to="'/istat/' + feature.properties.istatId">
-          <i class="material-icons">insert_chart_outlined</i>
-          {{ feature.properties.name }}
+        <router-link :to="{ 
+            path: '/istat/' + feature.properties.istatId
+        }">
+          <div style="display: flex; flex-direction: row; align-items:center;">
+            <i class="material-icons">insert_chart_outlined</i>
+            {{ feature.properties.name }}
+          </div>
         </router-link>
       </b-col>
     </b-row>
@@ -36,7 +40,6 @@
 <script>
 export default {
   props: ["feature"],
-
   methods: {
     onClick() {
       console.log("CLICKED");

@@ -11,7 +11,7 @@ const routes = [
     },
     {
         path: '/istat/:istatId',
-        component: MunicipalityDetails
+        component: MunicipalityDetails,
     }
 ];
 
