@@ -64,8 +64,10 @@
 <script>
 import L from "leaflet";
 import { LMap, LTileLayer, LControl } from "vue2-leaflet";
+import MapPopup from "./MapPopup";
 
 import MapLegend from "./MapLegend";
+import Vue from "vue";
 
 export default {
   props: {
@@ -82,7 +84,7 @@ export default {
   },
   data() {
     return {
-      geoJson: null,
+      geoJson: {},
       zoom: 7,
       center: [45.75151263, 9.90631523],
       url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
@@ -93,7 +95,8 @@ export default {
       },
       showMap: true,
       showLegend: true,
-      locationIcon: "gps_not_fixed"
+      locationIcon: "gps_not_fixed",
+      instance: {}
     };
   },
   async created() {
@@ -104,6 +107,7 @@ export default {
 
     this.addGeoJson();
   },
+  mounted() {},
   watch: {
     flyTo() {
       if (this.flyTo.length !== 0) {
@@ -140,28 +144,17 @@ export default {
     },
 
     onEachFeature(feature, layer) {
-      // Check if the properties to be displayed are defined
-      if (feature.properties && feature.properties.name) {
-        let c =
-          '<a href="http://chart.ioconto.org/IoContoCompChart/drawCityChart.htm?city=' +
-          feature.properties.istatId +
-          '" target="_blank"><i class="material-icons">insert_chart_outlined</i><strong>' +
-          feature.properties.name +
-          "</strong></a><br />";
-        c += "Decessi Marzo 2020: " + feature.properties.deaths + " (+" +
-          feature.properties.ratio * 100 +
-          "%)<br />";
-        c +=
-          "Decessi Marzo 2015-19: " +
-          feature.properties.avgDeaths +
-          "<br />";
-        c += "Differenza: " + feature.properties.delta + "<br />";
-        c += "Popolazione: " + feature.properties.population + "<br />";
-        c +=
-          "Pecentuale decessi su popolazione: " +
-          feature.properties.mortality +
-          "%<br />";
-        layer.bindPopup(c);
+      if (feature) {
+        const MapPopupClass = Vue.extend(MapPopup);
+        Vue.extend(MapPopup);
+        this.instance = new MapPopupClass({
+          propsData: {
+            feature: feature
+          },
+          router: this.$router
+        });
+        this.instance.$mount();
+        layer.bindPopup(this.instance.$el);
       }
     },
     customCircleMarker(properties) {
@@ -271,5 +264,4 @@ ul {
   overflow: hidden;
   max-height: 0;
 }
-
 </style>

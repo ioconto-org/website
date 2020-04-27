@@ -35,10 +35,11 @@
 
 <script>
 export default {
-  props: {
-    feature: {
-      type: Object,
-      required: true
+  props: ["feature"],
+
+  methods: {
+    onClick() {
+      console.log("CLICKED");
     }
   }
 };
