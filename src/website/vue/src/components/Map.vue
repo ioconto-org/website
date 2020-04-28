@@ -6,7 +6,7 @@
         :zoom="zoom"
         :center="center"
         :options="mapOptions"
-        :style="'height:' + height"
+        :style="'height:' + height + ';width:' + width"
         @update:center="centerUpdate"
         @update:zoom="zoomUpdate"
       >
@@ -120,6 +120,10 @@ export default {
     height: {
       type: String,
       default: "100%"
+    },
+    width: {
+      type: String,
+      default: "100%"
     }
   },
   components: {
@@ -163,7 +167,7 @@ export default {
 
       if (this.$route.path.includes("/istat")) {
         this.$router.replace({
-          path: "/istat/" + this.feature.properties.istatId
+          path: `/istat/${this.feature.properties.istatId}`
         });
       } else {
         this.$refs.map.mapObject.flyTo(
@@ -206,8 +210,9 @@ export default {
 
     selectMarker(latLng, feature) {
       this.popupFeature = feature;
-      console.log(this.popupFeature);
-      this.$refs.features.mapObject.openPopup([latLng[1], latLng[0]]);
+      setTimeout(() => {
+        this.$refs.features.mapObject.openPopup([latLng[1], latLng[0]]);
+      }, 10);
     }
   }
 };

@@ -1,7 +1,7 @@
 <template>
-  <b-container class="m-4" fluid v-if="feature">
+  <b-container class="p-4" fluid v-if="feature">
     <b-row>
-      <b-col cols="5" class="details-column">
+      <b-col md="5" lg="5" cols="12" class="details-column pb-4">
         <b-card>
           <b-row class="pt-2 pb-2" no-gutters align-v="center">
             <b-col cols="auto" class="mr-1">
@@ -38,9 +38,10 @@
         </b-card>
       </b-col>
 
-      <b-col cols="5" class="map-colum">
+      <b-col md="5" cols="12" class="map-colum">
         <Map
-          :height="'80%'"
+          :width="'80%'"
+          :height="'60%'"
           :legend="false"
           :center="[feature.geometry.coordinates[1], feature.geometry.coordinates[0]]"
           :zoom="12"

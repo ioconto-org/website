@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="feature.properties">
     <b-row>
       <b-col>
         <router-link :to="{ 
