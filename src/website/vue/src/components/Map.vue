@@ -33,6 +33,25 @@
           </a>
         </l-control>
 
+        <l-feature-group ref="features">
+          <l-popup>
+            <map-popup :feature="popupFeature"></map-popup>
+          </l-popup>
+        </l-feature-group>
+
+        <l-circle-marker
+          @click="selectMarker(f.geometry.coordinates, f)"
+          :key="i"
+          :radius="7"
+          :opacity="1"
+          :weight="1"
+          :fillOpacity="0.8"
+          :fillColor="f.properties._umap_options.color"
+          :color="'white'"
+          v-for="(f, i) in geoJson.features"
+          :lat-lng="[f.geometry.coordinates[1], f.geometry.coordinates[0]]"
+        ></l-circle-marker>
+
         <div v-if="legend">
           <transition name="slide">
             <l-control
@@ -66,12 +85,17 @@
 </template>
 
 <script>
-import L from "leaflet";
-import { LMap, LTileLayer, LControl } from "vue2-leaflet";
+import {
+  LMap,
+  LTileLayer,
+  LControl,
+  LCircleMarker,
+  LPopup,
+  LFeatureGroup
+} from "vue2-leaflet";
 import MapPopup from "./MapPopup";
 
 import MapLegend from "./MapLegend";
-import Vue from "vue";
 
 import EventBus from "../event-bus";
 
@@ -102,7 +126,11 @@ export default {
     LMap,
     LTileLayer,
     LControl,
-    MapLegend
+    LCircleMarker,
+    LFeatureGroup,
+    LPopup,
+    MapLegend,
+    MapPopup
   },
   data() {
     return {
@@ -117,7 +145,8 @@ export default {
       showMap: true,
       showLegend: true,
       locationIcon: "gps_not_fixed",
-      instance: {}
+      instance: {},
+      popupFeature: {}
     };
   },
   async created() {
@@ -125,7 +154,6 @@ export default {
       "https://raw.githubusercontent.com/ioconto/covid19/master/opendata/current/it-total-deaths.json"
     );
     this.geoJson = await response.json();
-    this.addGeoJson();
     this.loading = false;
 
     EventBus.$on("update:search", text => {
@@ -156,46 +184,6 @@ export default {
     centerUpdate(center) {
       this.currentCenter = center;
     },
-    showLongText() {
-      this.showParagraph = !this.showParagraph;
-    },
-    innerClick() {
-      alert("Click!");
-    },
-
-    addGeoJson() {
-      L.geoJSON(this.geoJson, {
-        pointToLayer: (feature, latlng) =>
-          L.circleMarker(latlng, this.customCircleMarker(feature.properties)),
-        onEachFeature: this.onEachFeature
-      }).addTo(this.$refs.map.mapObject);
-    },
-
-    onEachFeature(feature, layer) {
-      if (feature) {
-        const MapPopupClass = Vue.extend(MapPopup);
-        Vue.extend(MapPopup);
-        this.instance = new MapPopupClass({
-          propsData: {
-            feature: feature
-          },
-          router: this.$router
-        });
-        this.instance.$mount();
-        layer.bindPopup(this.instance.$el);
-      }
-    },
-    customCircleMarker(properties) {
-      var circleMarkerOptions = {
-        radius: 7,
-        color: "#fff",
-        weight: 1,
-        opacity: 1,
-        fillOpacity: 0.8,
-        fillColor: properties._umap_options.color
-      };
-      return circleMarkerOptions;
-    },
 
     goToCurrentLocation() {
       if (navigator.geolocation) {
@@ -214,6 +202,12 @@ export default {
 
     toggleLegend() {
       this.showLegend = !this.showLegend;
+    },
+
+    selectMarker(latLng, feature) {
+      this.popupFeature = feature;
+      console.log(this.popupFeature);
+      this.$refs.features.mapObject.openPopup([latLng[1], latLng[0]]);
     }
   }
 };
