@@ -40,11 +40,7 @@
 <script>
 export default {
   props: ["feature"],
-  methods: {
-    onClick() {
-      console.log("CLICKED");
-    }
-  }
+  methods: {}
 };
 </script>
 

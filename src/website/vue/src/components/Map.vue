@@ -6,7 +6,7 @@
         :zoom="zoom"
         :center="center"
         :options="mapOptions"
-        style="height: 100%"
+        :style="'height:' + height"
         @update:center="centerUpdate"
         @update:zoom="zoomUpdate"
       >
@@ -33,31 +33,33 @@
           </a>
         </l-control>
 
-        <transition name="slide">
+        <div v-if="legend">
+          <transition name="slide">
+            <l-control
+              v-show="showLegend"
+              title="Legenda"
+              class="leaflet-bar leaflet-control"
+              disableClickPropagation
+              position="bottomleft"
+            >
+              <a class="legend-container">
+                <map-legend></map-legend>
+              </a>
+            </l-control>
+          </transition>
+
           <l-control
-            v-show="showLegend"
+            :class="showLegend ? 'rotate-0' : 'rotate-180'"
             title="Legenda"
             class="leaflet-bar leaflet-control"
             disableClickPropagation
             position="bottomleft"
           >
-            <a class="legend-container">
-              <map-legend></map-legend>
+            <a @click="toggleLegend()" class="map-control data-control">
+              <i class="material-icons">keyboard_arrow_down</i>
             </a>
           </l-control>
-        </transition>
-
-        <l-control
-          :class="showLegend ? 'rotate-0' : 'rotate-180'"
-          title="Legenda"
-          class="leaflet-bar leaflet-control"
-          disableClickPropagation
-          position="bottomleft"
-        >
-          <a @click="toggleLegend()" class="map-control data-control">
-            <i class="material-icons">keyboard_arrow_down</i>
-          </a>
-        </l-control>
+        </div>
       </l-map>
     </div>
   </b-overlay>
@@ -71,11 +73,29 @@ import MapPopup from "./MapPopup";
 import MapLegend from "./MapLegend";
 import Vue from "vue";
 
+import EventBus from "../event-bus";
+
 export default {
   props: {
     flyTo: {
       type: Array,
       default: () => []
+    },
+    legend: {
+      type: Boolean,
+      default: true
+    },
+    center: {
+      type: Array,
+      default: () => [45.75151263, 9.90631523]
+    },
+    zoom: {
+      type: Number,
+      default: 7
+    },
+    height: {
+      type: String,
+      default: "100%"
     }
   },
   components: {
@@ -88,8 +108,6 @@ export default {
     return {
       loading: true,
       geoJson: {},
-      zoom: 7,
-      center: [45.75151263, 9.90631523],
       url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
       attribution:
         '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>',
@@ -109,21 +127,28 @@ export default {
     this.geoJson = await response.json();
     this.addGeoJson();
     this.loading = false;
-  },
-  mounted() {},
-  watch: {
-    flyTo() {
-      if (this.flyTo.length !== 0) {
+
+    EventBus.$on("update:search", text => {
+      this.feature = this.geoJson.features.find(
+        feature => feature.properties.name === text
+      );
+
+      if (this.$route.path.includes("/istat")) {
+        this.$router.replace({
+          path: "/istat/" + this.feature.properties.istatId
+        });
+      } else {
         this.$refs.map.mapObject.flyTo(
           {
-            lat: this.flyTo[1],
-            lng: this.flyTo[0]
+            lat: this.feature.geometry.coordinates[1],
+            lng: this.feature.geometry.coordinates[0]
           },
-          12
+          10
         );
       }
-    }
+    });
   },
+
   methods: {
     zoomUpdate(zoom) {
       this.currentZoom = zoom;
@@ -163,11 +188,11 @@ export default {
     customCircleMarker(properties) {
       var circleMarkerOptions = {
         radius: 7,
-        color: "#fff", // stroke color
-        weight: 1, // stroke width
-        opacity: 1, // stroke opacity
-        fillOpacity: 0.8, // marker fill opacity
-        fillColor: properties._umap_options.color // marker fill color
+        color: "#fff",
+        weight: 1,
+        opacity: 1,
+        fillOpacity: 0.8,
+        fillColor: properties._umap_options.color
       };
       return circleMarkerOptions;
     },
@@ -189,7 +214,6 @@ export default {
 
     toggleLegend() {
       this.showLegend = !this.showLegend;
-      //console.log("legend");
     }
   }
 };
