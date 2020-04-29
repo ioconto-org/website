@@ -1,0 +1,66 @@
+[
+  {
+    "job": "geojson",
+    "priority": "1000",
+    "name": "Add Bs data to tmp_municipalities",
+    "type": "sql",
+    "query": "INSERT INTO tmp_municipalities SELECT b.istatId, b.name FROM `it-deaths-brescia` b LEFT OUTER JOIN tmp_municipalities s ON b.istatId = s.istatId WHERE s.istatId IS NULL"
+  },
+  {
+    "job": "geojson",
+    "priority": "100",
+    "name": "Create tmp_municipalities",
+    "type": "sql",
+    "query": "DROP TABLE IF EXISTS tmp_municipalities; CREATE TABLE tmp_municipalities AS SELECT istatId, name FROM `it-municipalities-daily-deaths` WHERE t20 <> 9999 AND month = 3 GROUP BY istatId, name"
+  },
+  {
+    "job": "geojson",
+    "priority": "1000",
+    "name": "Add Bg data to tmp_municipalities",
+    "type": "sql",
+    "query": "INSERT INTO tmp_municipalities SELECT b.istatId, b.name FROM `it-deaths-bergamo` b LEFT OUTER JOIN tmp_municipalities s ON b.istatId = s.istatId WHERE s.istatId IS NULL"
+  },
+  {
+    "job": "geojson",
+    "priority": "1200",
+    "name": "Create tmp_geocodes_missing for tmp_municipalities",
+    "type": "sql",
+    "query": "DROP TABLE IF EXISTS tmp_geocodes_missing; CREATE TABLE tmp_geocodes_missing AS SELECT d.*, m.population, m.nameItSt, g.lng, g.lat FROM `tmp_municipalities` d INNER JOIN `it-municipalities` m ON d.istatId = m.istatId LEFT OUTER JOIN `it-municipalities-geo` g ON d.istatId = g.istatId WHERE g.lng IS NULL"
+  },
+  {
+    "job": "geojson",
+    "priority": "2000",
+    "name": "Create tmp output table",
+    "type": "sql",
+    "query": "DROP TABLE IF EXISTS tmp_output; CREATE TABLE tmp_output AS SELECT d.istatId, d.name, 3 AS month, 0 AS d15, 0 AS d16, 0 AS d17, 0 AS d18, 0 AS d19, 0 AS d20, 0 AS istatMarch, 0 AS ecoBG, 0 AS bsToday, 0 AS mar19, 0 AS mar20, 0 AS officialCovid, m.population, m.nameItSt, g.lng, g.lat FROM `tmp_municipalities` d    INNER JOIN `it-municipalities` m ON d.istatId = m.istatId INNER JOIN `it-municipalities-geo` g ON d.istatId = g.istatId"
+  },
+  {
+    "job": "geojson",
+    "priority": "3000",
+    "name": "Generate temporary table to transfer istat data",
+    "type": "sql",
+    "query": "DROP TABLE IF EXISTS tmp_output_tmp; CREATE TABLE tmp_output_tmp AS SELECT m.`istatId`, m.`name`, month, sum(t15) AS d15, sum(t16) AS d16, sum(t17) AS d17, sum(t18) AS d18, sum(t19) AS d19, sum(t20) AS d20, 0 as istatMarch, 0 as ecoBG, 0 as bsToday FROM `tmp_municipalities` m LEFT OUTER JOIN `it-municipalities-daily-deaths` d ON m.istatId = d.istatId WHERE month = 3 AND day BETWEEN 1 AND 31 GROUP BY m.`istatId`, m.`name`, d.month"
+  },
+  {
+    "job": "geojson",
+    "priority": "4000",
+    "name": "Transfer istat data for march to output table",
+    "type": "sql",
+    "query": "UPDATE tmp_output m INNER JOIN `tmp_output_tmp`t on m.istatId = t.istatId SET m.d15 = t.d15, m.d16 = t.d16, m.d17 = t.d17, m.d18 = t.d18, m.d19 = t.d19, m.d20 = t.d20, m.istatMarch = 1"
+  },
+  {
+    "job": "geojson",
+    "priority": "5000",
+    "name": "Add BG data to output table",
+    "type": "sql",
+    "query": "UPDATE tmp_output m INNER JOIN `it-deaths-bergamo` r ON m.`istatId` = r.`istatId` SET m.mar19 = r.mar19, m.mar20 = r.mar20, m.officialCovid = r.officialCovid, m.ecoBG = 1 WHERE m.month = 3"
+  },
+  {
+    "job": "geojson",
+    "priority": "6000",
+    "name": "Add BS data to output table",
+    "type": "sql",
+    "query": "UPDATE tmp_output m INNER JOIN `it-deaths-brescia` r ON m.`istatId` = r.`istatId` SET m.mar19 = r.mar19, m.mar20 = r.mar20, m.officialCovid = r.officialCovid, m.bsToday = 1 WHERE m.month = 3"
+  }
+]
+
