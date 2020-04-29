@@ -167,14 +167,18 @@ module.exports = function(logger) {
     const tableName = (entity) ? `${country}-${entity}` : country;
     const sql = getCreateTableSql(tableName);
     return new Promise((resolve, reject) => {
-      connection.query(sql, function (error, results, fields) {
-        if (error)  {
-          reject(error);
-        } else {
-          logger.info(`Table ${tableName} created.`);
-          resolve();
-        }
-      });
+      if (sql) {
+        connection.query(sql, function (error, results, fields) {
+          if (error)  {
+            reject(error);
+          } else {
+            logger.info(`Table ${tableName} created.`);
+            resolve();
+          }
+        });
+      } else {
+        reject(`Table ${tableName} definition not found.`)
+      }
     });
   }
 
@@ -313,12 +317,24 @@ module.exports = function(logger) {
           UNIQUE KEY istatId (istatId)
           ) DEFAULT CHARSET=utf8; `;
         break;
+
+      case 'it-municipalities-cloud':
+        ret = `CREATE TABLE IF NOT EXISTS \`${entity}\` (
+          istatId INT NOT NULL ,
+          name VARCHAR(255) NOT NULL , 
+          UNIQUE KEY istatId (istatId)
+          ) DEFAULT CHARSET=utf8; `;
+        break;
+
+      default:
+        ret = null;
+        break;
     }
     return ret;
   }
 
   function getInsertSql(d, entity) {
-    let ret;
+    let ret = 'SELECT 1;';
     switch(entity) {
       case 'it-municipalities-daily-deaths':
         let name = connection.escape(d.NOME_COMUNE);
@@ -347,6 +363,19 @@ module.exports = function(logger) {
         ret = `INSERT INTO \`it-municipalities\` (regionId, subRegionId, provinceId, progProv, istatIdStr, nameItSt, nameIt, nameSt, ripGeoId, ripGeoName, regionName, nameSubReg, provinceCity, carPlate, istatId, istatId2016, istatId2009, istatId2005, cadastreId, population, NUTS1, NUTS2, NUTS3) VALUES
         (${d.regionId}, ${d.subRegionId}, ${d.provinceId}, ${d.progProv}, '${d.istatIdStr}', ${connection.escape(d.nameItSt)}, ${connection.escape(d.nameIt)}, ${connection.escape(d.nameSt)}, ${d.ripGeoId}, '${d.ripGeoName}', ${connection.escape(d.regionName)}, ${connection.escape(d.nameSubReg)}, ${d.provinceCity}, '${d.carPlate}', ${d.istatId}, ${d.istatId2016}, ${d.istatId2009}, ${d.istatId2005}, '${d.cadastreId}', ${population}, '${d.NUTS1}', '${d.NUTS2}', '${d.NUTS3}')`;
         break;
+
+      case 'it-municipalities-cloud':
+        const istatId = parseInt(d['Codice Istat']);
+        if (istatId) {
+          const mun = connection.escape(d.Comune);
+          ret = `INSERT INTO \`it-municipalities-cloud\` (istatId, name) VALUES
+          (${istatId}, ${mun});`;
+        }
+        break;
+
+      default:
+        ret = null;
+        break;
     }
     return ret;
   }
@@ -354,13 +383,17 @@ module.exports = function(logger) {
   function write(data, entity) {
     return new Promise((resolve, reject) => {
       const sql = getInsertSql(data, entity);
-      connection.query(sql, function (error, results, fields) {
-        if (error)  {
-          reject(error);
-        } else {
-          resolve();
-        }
-      });
+      if (sql) {
+        connection.query(sql, function (error, results, fields) {
+          if (error)  {
+            reject(error);
+          } else {
+            resolve();
+          }
+        });
+      } else {
+        reject(`Table ${entity} insert SQL not found.`)
+      }
     });
   }
 
