@@ -10,7 +10,7 @@
     "priority": "2000",
     "name": "Create tmp geojson output table",
     "type": "sql",
-    "query": "DROP TABLE IF EXISTS tmp_geojson; CREATE TABLE tmp_geojson AS SELECT m.istatId, g.lng, g.lat, d.istatId AS ANPR, m.`nameItSt`, m.nameSubReg, m.regionName, 3 as month, 0 AS d15, 0 AS d16, 0 AS d17, 0 AS d18, 0 AS d19, 0 AS d20, 0 AS mar19, 0 AS mar20, 0 AS officialCovid, 0 as istatMarch, 0 as ecoBG, 0 as bsToday FROM `it-municipalities` m LEFT OUTER JOIN `it-municipalities-cloud` d ON m.istatId = d.istatId LEFT OUTER JOIN `it-municipalities-geo` g ON m.istatId = g.istatId"
+    "query": "DROP TABLE IF EXISTS tmp_geojson; CREATE TABLE tmp_geojson AS SELECT m.istatId, m.population, g.lng, g.lat, d.istatId AS ANPR, m.nameItSt AS name, m.nameSubReg AS province, m.regionName AS region, 3 as month, 0 AS d15, 0 AS d16, 0 AS d17, 0 AS d18, 0 AS d19, 0 AS d20, 0 AS mar19, 0 AS mar20, 0 AS officialCovid, 0 as istatMarch, 0 as ecoBG, 0 as bsToday FROM `it-municipalities` m LEFT OUTER JOIN `it-municipalities-cloud` d ON m.istatId = d.istatId LEFT OUTER JOIN `it-municipalities-geo` g ON m.istatId = g.istatId"
   },
   {
     "job": "geojson",
