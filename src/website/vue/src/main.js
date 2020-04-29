@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import VueMeta from 'vue-meta';
 import App from './App.vue';
 import VueGtag from "vue-gtag";
 import BootstrapVue from 'bootstrap-vue';
@@ -22,6 +23,7 @@ Icon.Default.mergeOptions({
   shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
 });
 
+Vue.use(VueMeta);
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
 Vue.use(VueGtag, {

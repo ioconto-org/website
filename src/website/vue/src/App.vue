@@ -62,6 +62,19 @@ import VueBootstrapTypeahead from "vue-bootstrap-typeahead";
 
 export default {
   name: "App",
+  metaInfo: {
+    title: "ioConto",
+    titleTemplate: '%s | #uniticelafaremo',
+    meta: [
+      { property: 'og:url', content: 'https://www.ioconto.org' },
+      { property: 'og:type', content: 'article' },
+      { property: 'og:title', content: 'ioConto' },
+      { property: 'og:description', content: 'Open Data per covid9' },
+      { property: 'og:image', content: 'https://www.ioconto.org/assets/mappa.jpg' },
+      { property: 'og:type', content: 'https://www.ioconto.org' },
+      { name: 'description', content: 'ioConto - Open Data per Covid19' }
+    ]
+  },
   components: {
     Map,
     VueBootstrapTypeahead
