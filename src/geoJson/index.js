@@ -26,10 +26,17 @@ csv()
         name: loc.name,
         province: loc.province,
         region: loc.region,
-        anpr: (loc.ANPR) ? true : false,
-        data: (istat || ecoBG || bsToday)
+        anpr: (loc.ANPR != "NULL") ? true : false,
+        data: (istat || ecoBG || bsToday),
       }
-      if (istat || ecoBG || bsToday) {  //we have data to display
+
+      if (city.data) {  //we have data to display
+        //We have data, let's add coordinates
+        city.coordinates = [
+          parseFloat(loc.lng),
+          parseFloat(loc.lat)
+        ];
+
         let avgDeaths, deaths, description, deltaDeaths, ratio, mortality, source, officialCovid;
         const population = parseInt(loc.population);
 
@@ -62,10 +69,7 @@ csv()
           type: "Feature",
           geometry: {
             type: "Point",
-            coordinates: [
-              parseFloat(loc.lng),
-              parseFloat(loc.lat)
-            ]
+            coordinates: city.coordinates
           },
           properties: {
             _umap_options: {

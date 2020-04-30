@@ -95,13 +95,29 @@ export default {
     this.geoJson = await response.json();
     this.locations = this.geoJson.features.map(feature => ({
       name: feature.properties.name,
-      coordinates: feature.geometry.coordinates
+      coordinates: feature.geometry.coordinates     
+    }));
+    this.geoJson = require('./assets/it-municipalities.json');
+    this.locations = this.geoJson.map(city => ({
+      name: city.name,
+      coordinates: city.coordinates,
+      data: city.data,
+      anpr: city.anpr
     }));
   },
 
   methods: {
     select() {
-      this.loc = this.locations.find(loc => loc.name === this.selection);
+      const loc = this.locations.find(loc => loc.name === this.selection);
+      if (loc.data) {
+        this.loc = loc;
+      } else if (loc.anpr) {
+        //display anpr message
+        alert(`Il comune di ${loc.name}, pur facendo parte dell'ANPR, non è stato incluso dall'Istat nell'elenco che ha pubblicato. In teoria potrebbe essere una buona notizia, ma nella realtà i dati del tuo comune potrebbero essere negativi: aiutaci, cercando chi li detienie e segnalali con <a href="https://docs.google.com/forms/d/e/1FAIpQLSe_gJ1vM_2WXYkCNoyGwWRjLJcSlvEf9DwZAfpwR3IXLqbwSw/viewform">questa form</a>`);
+      } else {
+        //display no anpr message
+        alert(`Il comune di ${loc.name} non aderisce all'ANPR e di conseguenza l'Istat non può pubblicare i suoi dati. Aiutaci, cercando chi li detiene per il tuo comune e segnalali con <a href="https://docs.google.com/forms/d/e/1FAIpQLSe_gJ1vM_2WXYkCNoyGwWRjLJcSlvEf9DwZAfpwR3IXLqbwSw/viewform">questa form</a>`);
+      }
     }
   }
 };
