@@ -36,7 +36,6 @@
         <l-control
           v-show="showLegend"
           title="Legenda"
-          class="leaflet-bar leaflet-control"
           disableClickPropagation
           position="bottomleft"
         >
@@ -73,6 +72,10 @@ export default {
       type: Array,
       default: () => []
     }
+    // names: {
+    //   type: Array,
+    //   default: () => []
+    // }
   },
   components: {
     LMap,
@@ -102,7 +105,7 @@ export default {
     );
     this.geoJson = await response.json();
 
-    this.geoJson = require('../assets/it-total-deaths.json');
+    this.geoJson = require("../assets/it-total-deaths.json");
     this.addGeoJson();
   },
   watch: {
@@ -142,20 +145,21 @@ export default {
 
     onEachFeature(feature, layer) {
       // Check if the properties to be displayed are defined
-      if (feature.properties && feature.properties.name) {
+      if (feature.properties) {
         let c =
           '<a href="http://chart.ioconto.org/IoContoCompChart/drawCityChart.htm?city=' +
           feature.properties.istatId +
           '" target="_blank"><i class="material-icons">insert_chart_outlined</i><strong>' +
-          feature.properties.name +
+          // feature.properties.name +
           "</strong></a><br />";
-        c += "Decessi Marzo 2020: " + feature.properties.deaths + " (+" +
+        c +=
+          "Decessi Marzo 2020: " +
+          feature.properties.deaths +
+          " (+" +
           feature.properties.ratio * 100 +
           "%)<br />";
         c +=
-          "Decessi Marzo 2015-19: " +
-          feature.properties.avgDeaths +
-          "<br />";
+          "Decessi Marzo 2015-19: " + feature.properties.avgDeaths + "<br />";
         c += "Differenza: " + feature.properties.delta + "<br />";
         c += "Popolazione: " + feature.properties.population + "<br />";
         c +=
@@ -272,5 +276,4 @@ ul {
   overflow: hidden;
   max-height: 0;
 }
-
 </style>

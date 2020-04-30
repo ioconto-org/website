@@ -1,8 +1,32 @@
 <template>
-  <b-card>
+  <b-card class="card shadow-lg">
     <b-row align-v="center">
       <b-col cols="auto">
-        <div class="circle red"></div>
+        <div style="background-color: lightpink" class="circle"></div>
+      </b-col>
+      <b-col>
+        <div class="text">Decessi aumentati fino al 50%</div>
+      </b-col>
+    </b-row>
+    <b-row align-v="center">
+      <b-col cols="auto">
+        <div style="background-color: hotpink" class="circle"></div>
+      </b-col>
+      <b-col>
+        <div class="text">Decessi aumentati fino al 75%</div>
+      </b-col>
+    </b-row>
+    <b-row align-v="center">
+      <b-col cols="auto">
+        <div style="background-color: magenta" class="circle"></div>
+      </b-col>
+      <b-col>
+        <div class="text">Decessi aumentati fino al 100%</div>
+      </b-col>
+    </b-row>
+    <b-row align-v="center">
+      <b-col cols="auto">
+        <div style="background-color: red" class="circle"></div>
       </b-col>
       <b-col>
         <div class="text">Decessi più del doppio degli anni precedenti</div>
@@ -10,18 +34,10 @@
     </b-row>
     <b-row align-v="center">
       <b-col cols="auto">
-        <div class="circle yellow"></div>
+        <div style="background-color: purple" class="circle"></div>
       </b-col>
       <b-col>
-        <div class="text">Incremento significativo rispetto agli anni precedenti</div>
-      </b-col>
-    </b-row>
-    <b-row align-v="center">
-      <b-col cols="auto">
-        <div class="circle green"></div>
-      </b-col>
-      <b-col>
-        <div class="text">Incremento minore del 25% rispetto agli anni precedenti</div>
+        <div class="text">In marzo più dell'1% della popolazione è deceduta</div>
       </b-col>
     </b-row>
   </b-card>
@@ -32,22 +48,14 @@ export default {};
 </script>
 
 <style scoped>
+.card {
+  min-width: 300px;
+}
+
 .circle {
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
-}
-
-.red {
-  background-color: red;
-}
-
-.yellow {
-  background-color: yellow;
-}
-
-.green {
-  background-color: green;
 }
 
 .text {

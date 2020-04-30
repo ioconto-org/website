@@ -16,10 +16,28 @@
         size="lg"
       ></VueBootstrapTypeahead>
 
+      <b-modal title="No data" ok-only id="anpr">
+        <p>
+          Il comune di {{ displayName }}, pur facendo parte dell'ANPR, non è stato incluso dall'Istat nell'elenco che ha pubblicato. In teoria potrebbe essere una buona notizia, ma nella realtà i dati del tuo comune potrebbero essere negativi: aiutaci, cercando chi li detienie e segnalali con
+          <a
+            href="https://docs.google.com/forms/d/e/1FAIpQLSe_gJ1vM_2WXYkCNoyGwWRjLJcSlvEf9DwZAfpwR3IXLqbwSw/viewform"
+          >questa form</a>
+        </p>
+      </b-modal>
+
+      <b-modal title="No data" ok-only id="no-anpr">
+        <p>
+          Il comune di {{ displayName }} non aderisce all'ANPR e di conseguenza l'Istat non può pubblicare i suoi dati. Aiutaci, cercando chi li detiene per il tuo comune e segnalali con
+          <a
+            href="https://docs.google.com/forms/d/e/1FAIpQLSe_gJ1vM_2WXYkCNoyGwWRjLJcSlvEf9DwZAfpwR3IXLqbwSw/viewform"
+          >questa form</a>
+        </p>
+      </b-modal>
+
       <b-navbar-nav pills class="ml-auto">
         <b-nav-item v-b-modal.info-modal>Chi siamo</b-nav-item>
 
-        <b-modal ok-only title="Chi siamo" id="info-modal">
+        <b-modal title="Chi siamo" id="info-modal">
           <p>
             In Italia e nel Mondo abbiamo di fronte un futuro incerto.
             Perché questo futuro possa essere indirizzato in senso positivo, è necessario che si prendano ora decisioni basate sulla analisi di dati completi, verificati e che siano stati raccolti in modo omogeneo relativamente alla diffusione delle infezioni, ospedalizzazioni e decessi causati dal virus SARS-Cov-2.
@@ -53,6 +71,8 @@
     </div>
 
     <Map :flyTo="loc.coordinates"></Map>
+
+    <!-- <Map :names="names" :flyTo="loc.coordinates"></Map> -->
   </div>
 </template>
 
@@ -64,15 +84,18 @@ export default {
   name: "App",
   metaInfo: {
     title: "ioConto",
-    titleTemplate: '%s | #uniticelafaremo',
+    titleTemplate: "%s | #uniticelafaremo",
     meta: [
-      { property: 'og:url', content: 'https://www.ioconto.org' },
-      { property: 'og:type', content: 'article' },
-      { property: 'og:title', content: 'ioConto' },
-      { property: 'og:description', content: 'Open Data per covid9' },
-      { property: 'og:image', content: 'https://www.ioconto.org/assets/mappa.jpg' },
-      { property: 'og:type', content: 'https://www.ioconto.org' },
-      { name: 'description', content: 'ioConto - Open Data per Covid19' }
+      { property: "og:url", content: "https://www.ioconto.org" },
+      { property: "og:type", content: "article" },
+      { property: "og:title", content: "ioConto" },
+      { property: "og:description", content: "Open Data per covid9" },
+      {
+        property: "og:image",
+        content: "https://www.ioconto.org/assets/mappa.jpg"
+      },
+      { property: "og:type", content: "https://www.ioconto.org" },
+      { name: "description", content: "ioConto - Open Data per Covid19" }
     ]
   },
   components: {
@@ -85,7 +108,8 @@ export default {
       locations: [],
       selection: "",
       names: [],
-      loc: {}
+      loc: {},
+      displayName: ""
     };
   },
   async beforeCreate() {
@@ -95,9 +119,14 @@ export default {
     this.geoJson = await response.json();
     this.locations = this.geoJson.features.map(feature => ({
       name: feature.properties.name,
-      coordinates: feature.geometry.coordinates     
+      coordinates: feature.geometry.coordinates
     }));
-    this.geoJson = require('./assets/it-municipalities.json');
+    this.geoJson = require("./assets/it-municipalities.json");
+
+    // this.geoJson.forEach(value => {
+    //   this.names[value.istatId] = value.name;
+    // });
+
     this.locations = this.geoJson.map(city => ({
       name: city.name,
       coordinates: city.coordinates,
@@ -113,10 +142,18 @@ export default {
         this.loc = loc;
       } else if (loc.anpr) {
         //display anpr message
-        alert(`Il comune di ${loc.name}, pur facendo parte dell'ANPR, non è stato incluso dall'Istat nell'elenco che ha pubblicato. In teoria potrebbe essere una buona notizia, ma nella realtà i dati del tuo comune potrebbero essere negativi: aiutaci, cercando chi li detienie e segnalali con <a href="https://docs.google.com/forms/d/e/1FAIpQLSe_gJ1vM_2WXYkCNoyGwWRjLJcSlvEf9DwZAfpwR3IXLqbwSw/viewform">questa form</a>`);
+        this.displayName = loc.name;
+        this.$bvModal.show("anpr");
+        // alert(
+        //   `Il comune di ${loc.name}, pur facendo parte dell'ANPR, non è stato incluso dall'Istat nell'elenco che ha pubblicato. In teoria potrebbe essere una buona notizia, ma nella realtà i dati del tuo comune potrebbero essere negativi: aiutaci, cercando chi li detienie e segnalali con <a href="https://docs.google.com/forms/d/e/1FAIpQLSe_gJ1vM_2WXYkCNoyGwWRjLJcSlvEf9DwZAfpwR3IXLqbwSw/viewform">questa form</a>`
+        // );
       } else {
         //display no anpr message
-        alert(`Il comune di ${loc.name} non aderisce all'ANPR e di conseguenza l'Istat non può pubblicare i suoi dati. Aiutaci, cercando chi li detiene per il tuo comune e segnalali con <a href="https://docs.google.com/forms/d/e/1FAIpQLSe_gJ1vM_2WXYkCNoyGwWRjLJcSlvEf9DwZAfpwR3IXLqbwSw/viewform">questa form</a>`);
+        this.displayName = loc.name;
+        this.$bvModal.show("no-anpr");
+        // alert(
+        //   `Il comune di ${loc.name} non aderisce all'ANPR e di conseguenza l'Istat non può pubblicare i suoi dati. Aiutaci, cercando chi li detiene per il tuo comune e segnalali con <a href="https://docs.google.com/forms/d/e/1FAIpQLSe_gJ1vM_2WXYkCNoyGwWRjLJcSlvEf9DwZAfpwR3IXLqbwSw/viewform">questa form</a>`
+        // );
       }
     }
   }
