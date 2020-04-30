@@ -102,6 +102,7 @@ export default {
     );
     this.geoJson = await response.json();
 
+    this.geoJson = require('../assets/it-total-deaths.json');
     this.addGeoJson();
   },
   watch: {

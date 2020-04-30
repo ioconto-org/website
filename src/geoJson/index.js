@@ -60,8 +60,8 @@ csv()
 
         let color = "LightPink";
         if (ratio > 0.50) color = "HotPink";
-        if (ratio > 0.75) color = "Red";
-        if (ratio > 1) color = "DarkRed";
+        if (ratio > 0.75) color = "Magenta";
+        if (ratio > 1) color = "Red";
         if (deaths/population > 0.01) {
           color = "Purple"
         }
