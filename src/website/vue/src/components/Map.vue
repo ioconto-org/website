@@ -71,11 +71,11 @@ export default {
     flyTo: {
       type: Array,
       default: () => []
+    },
+    names: {
+      type: Array,
+      default: () => []
     }
-    // names: {
-    //   type: Array,
-    //   default: () => []
-    // }
   },
   components: {
     LMap,
@@ -87,7 +87,7 @@ export default {
     return {
       geoJson: null,
       zoom: 7,
-      center: [45.75151263, 9.90631523],
+      center: [44, 11],
       url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
       attribution:
         '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>',
@@ -104,8 +104,6 @@ export default {
       "https://raw.githubusercontent.com/ioconto/covid19/master/opendata/current/it-total-deaths.json"
     );
     this.geoJson = await response.json();
-
-    this.geoJson = require("../assets/it-total-deaths.json");
     this.addGeoJson();
   },
   watch: {
@@ -150,7 +148,7 @@ export default {
           '<a href="http://chart.ioconto.org/IoContoCompChart/drawCityChart.htm?city=' +
           feature.properties.istatId +
           '" target="_blank"><i class="material-icons">insert_chart_outlined</i><strong>' +
-          // feature.properties.name +
+          feature.properties.name +
           "</strong></a><br />";
         c +=
           "Decessi Marzo 2020: " +
@@ -198,7 +196,6 @@ export default {
 
     toggleLegend() {
       this.showLegend = !this.showLegend;
-      //console.log("legend");
     }
   }
 };

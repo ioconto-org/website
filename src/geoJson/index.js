@@ -37,7 +37,7 @@ csv()
           parseFloat(loc.lat)
         ];
 
-        let avgDeaths, deaths, description, deltaDeaths, ratio, mortality, source, officialCovid;
+        let avgDeaths, deaths, deltaDeaths, ratio, mortality, source, officialCovid;
         const population = parseInt(loc.population);
 
         //avgDeaths = parseInt(loc.mar19);
@@ -79,8 +79,9 @@ csv()
             },
             //deaths: [loc.d15,loc.d16,loc.d17,loc.d18,loc.d19,loc.d20],
             istatId: loc.istatId,
-            name: loc.nameItSt,
-            description: description,
+            name: loc.name,
+            province: loc.province,
+            region: loc.region,
             population: population,
             deaths: deaths,
             delta: deltaDeaths,
