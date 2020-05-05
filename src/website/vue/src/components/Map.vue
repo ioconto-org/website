@@ -104,6 +104,7 @@ export default {
       "https://raw.githubusercontent.com/ioconto/covid19/master/opendata/current/it-total-deaths.json"
     );
     this.geoJson = await response.json();
+    //this.geoJson = require('../assets/it-total-deaths.json');
     this.addGeoJson();
   },
   watch: {
@@ -144,6 +145,8 @@ export default {
     onEachFeature(feature, layer) {
       // Check if the properties to be displayed are defined
       if (feature.properties) {
+        let ratio = feature.properties.ratio * 100;
+        ratio = (ratio > 0 ) ? "+" +  ratio : ratio;
         let c =
           '<a href="http://chart.ioconto.org/IoContoCompChart/drawCityChart.htm?city=' +
           feature.properties.istatId +
@@ -153,13 +156,11 @@ export default {
         c +=
           "Decessi Marzo 2020: " +
           feature.properties.deaths +
-          " (+" +
-          feature.properties.ratio * 100 +
-          "%)<br />";
+          " (" + ratio + "%)<br />";
         c +=
           "Decessi Marzo 2015-19: " + feature.properties.avgDeaths + "<br />";
         c += "Differenza: " + feature.properties.delta + "<br />";
-        c += "Popolazione: " + feature.properties.population + "<br />";
+        c += "Popolazione: " + feature.properties.population.toLocaleString() + "<br />";
         c +=
           "Pecentuale decessi su popolazione: " +
           feature.properties.mortality +

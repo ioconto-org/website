@@ -69,7 +69,7 @@ module.exports = function(logger) {
 
   return  {
     init,
-    write,
+//    write,
     stop
   };
 };

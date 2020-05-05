@@ -235,6 +235,7 @@ module.exports = function(logger) {
         break;
       
       case 'it-municipalities-daily-deaths':
+      case 'it-municipalities-daily-deaths-test':
         ret = `CREATE TABLE \`${entity}\` (
           regId int(11) NOT NULL,
           provId int(11) NOT NULL,
@@ -337,14 +338,16 @@ module.exports = function(logger) {
     let ret = 'SELECT 1;';
     switch(entity) {
       case 'it-municipalities-daily-deaths':
+      case 'it-municipalities-daily-deaths-test':
         let name = connection.escape(d.NOME_COMUNE);
         let region = connection.escape(d.NOME_REGIONE);
-        let province = connection.escape(d.NOME_REGIONE);
+        let province = connection.escape(d.NOME_PROVINCIA);
         ret = 'INSERT INTO `it-municipalities-daily-deaths` (`regId`, `provId`, `region`, `province`, `name`, `istatId`, `ageClass`, `dayS`, `day`, `month`, `m15`, `m16`, `m17`, `m18`, `m19`, `m20`, `f15`, `f16`, `f17`, `f18`, `f19`, `f20`, `t15`, `t16`, `t17`, `t18`, `t19`, `t20`) VALUES ';
         ret += `(${parseInt(d.REG)}, ${parseInt(d.PROV)}, ${region}, ${province}, ${name}, ${parseInt(d.COD_PROVCOM)}, ${parseInt(d.CL_ETA)}, '${d.GE}', ${parseInt(d.GE.substr(2,2))}, ${parseInt(d.GE.substr(0,2))}, 
-        ${parseInt(d.MASCHI_15)}, ${parseInt(d.MASCHI_16)}, ${parseInt(d.MASCHI_17)}, ${parseInt(d.MASCHI_18)}, ${parseInt(d.MASCHI_19)}, ${parseInt(d.MASCHI_20)},
-        ${parseInt(d.FEMMINE_15)}, ${parseInt(d.FEMMINE_16)}, ${parseInt(d.FEMMINE_17)}, ${parseInt(d.FEMMINE_18)}, ${parseInt(d.FEMMINE_19)}, ${parseInt(d.FEMMINE_20)},
-        ${parseInt(d.TOTALE_15)}, ${parseInt(d.TOTALE_16)}, ${parseInt(d.TOTALE_17)}, ${parseInt(d.TOTALE_18)}, ${parseInt(d.TOTALE_19)}, ${parseInt(d.TOTALE_20)});`;
+        ${parseInt(d.M_15)}, ${parseInt(d.M_16)}, ${parseInt(d.M_17)}, ${parseInt(d.M_18)}, ${parseInt(d.M_19)}, ${parseInt(d.M_20)},
+        ${parseInt(d.F_15)}, ${parseInt(d.F_16)}, ${parseInt(d.F_17)}, ${parseInt(d.F_18)}, ${parseInt(d.F_19)}, ${parseInt(d.F_20)},
+        ${parseInt(d.T_15)}, ${parseInt(d.T_16)}, ${parseInt(d.T_17)}, ${parseInt(d.T_18)}, ${parseInt(d.T_19)}, ${parseInt(d.T_20)});`;
+        ret = ret.replace(/NaN/g, "9999");  //fix on May 4th data
         break;
 
       case 'it-deaths-bergamo':

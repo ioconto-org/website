@@ -2,6 +2,14 @@
   <b-card class="card shadow-lg">
     <b-row align-v="center">
       <b-col cols="auto">
+        <div style="background-color: lightgreen" class="circle"></div>
+      </b-col>
+      <b-col>
+        <div class="text">Decessi inferiori agli anni precedenti</div>
+      </b-col>
+    </b-row>
+    <b-row align-v="center">
+      <b-col cols="auto">
         <div style="background-color: lightpink" class="circle"></div>
       </b-col>
       <b-col>

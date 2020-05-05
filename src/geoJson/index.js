@@ -58,7 +58,8 @@ csv()
           source = "Istat";
         }
 
-        let color = "LightPink";
+        let color = "LightGreen";
+        if (ratio > 0) color = "LightPink";
         if (ratio > 0.50) color = "HotPink";
         if (ratio > 0.75) color = "Magenta";
         if (ratio > 1) color = "Red";

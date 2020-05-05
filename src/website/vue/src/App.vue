@@ -115,6 +115,7 @@ export default {
       "https://raw.githubusercontent.com/ioconto/covid19/master/opendata/current/it-municipalities.json"
     );
     this.geoJson = await response.json();
+    //this.geoJson = require("./assets/it-municipalities.json");
     this.locations = this.geoJson.map(city => ({
       name: city.name,
       coordinates: city.coordinates,
