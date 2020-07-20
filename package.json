@@ -13,7 +13,7 @@
     "http-server": "^0.12.1",
     "kafka-logger": "^7.1.0",
     "leaflet": "^1.6.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "moment": "^2.24.0",
     "mysql": "^2.18.1",
     "vue": "^2.6.11",
