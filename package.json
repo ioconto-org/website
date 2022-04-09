@@ -14,7 +14,7 @@
     "kafka-logger": "^7.1.0",
     "leaflet": "^1.6.0",
     "lodash": "^4.17.15",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "mysql": "^2.18.1",
     "vue": "^2.6.11",
     "vue-bootstrap-typeahead": "^0.2.6",
